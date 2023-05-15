@@ -6,6 +6,7 @@ import * as dotenv from "dotenv";
 import morgan from 'morgan';
 import helmet from 'helmet';
 import { NODE_ENV } from "./config";
+import { validateRequestMethod } from "./middlewares/validator";
 
 
 dotenv.config();
@@ -16,6 +17,7 @@ const server = createServer(app);
 // app.options("*", cors());
 app.use(express.json());
 app.use(cors());
+app.use(validateRequestMethod(app));
 // app.use(express.urlencoded({ extended: false }));
 
 /* This code block is checking the value of the `NODE_ENV` environment variable. If it is set to
@@ -33,6 +35,9 @@ if(NODE_ENV!=='development'){
 
 // Defind route route
 app.get("/", (req: Request, res: Response) => res.send("Halo!!"));
+app.post("/test",(req,res)=>{
+  res.send("test");
+})
 export const startApp = () => {
   server.listen(port, () => {
     console.log(`App is running at port: ${port}`);
